@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApplication3.Models;
 
 namespace WebApplication3.Pages
 {
@@ -11,6 +12,8 @@ namespace WebApplication3.Pages
         {
             _logger = logger;
         }
+
+        public static SizeTable SizeTable { get; internal set; }
 
         public void OnGet()
         {

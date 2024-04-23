@@ -13,7 +13,7 @@ namespace WebApplication3.Data
             : base(options)
         {
         }
-
         public DbSet<WebApplication3.Models.Item> Item { get; set; } = default!;
+        public DbSet<WebApplication3.Models.SizeTable> SizeTable { get; set; } = default!;
     }
 }

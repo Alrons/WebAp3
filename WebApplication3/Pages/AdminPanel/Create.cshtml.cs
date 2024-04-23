@@ -19,6 +19,7 @@ namespace WebApplication3.Pages.AdminPanel
             _context = context;
         }
 
+        
 
         public IActionResult OnGet()
         {
@@ -36,7 +37,6 @@ namespace WebApplication3.Pages.AdminPanel
             {
                 return Page();
             }
-
             _context.Item.Add(Item);
             await _context.SaveChangesAsync();
 
