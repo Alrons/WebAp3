@@ -7,23 +7,29 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using WebApplication3.Data;
 using WebApplication3.Models;
+using SimpleJSON;
+using AllItems;
 
 namespace WebApplication3.Pages.AdminPanel
 {
     public class IndexModel : PageModel
     {
-        private readonly WebApplication3.Data.WebApplication3Context _context;
-
-        public IndexModel(WebApplication3.Data.WebApplication3Context context)
-        {
-            _context = context;
-        }
-
-        public IList<Item> Item { get;set; } = default!;
+        static readonly HttpClient client = new HttpClient();
+        public IList<Items> Item { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Item = await _context.Item.ToListAsync();
+            List<Items> items = new List<Items>();
+            var task = client.GetAsync("https://localhost:7139/api/Items");
+            HttpResponseMessage result = task.Result;
+            if (result.IsSuccessStatusCode)
+            {
+                Task<string> readString = result.Content.ReadAsStringAsync();
+                string jsonString = readString.Result;
+                Item = Items.FromJson(jsonString).ToList();
+            }
+
+            ViewData["items"] = items;
         }
     }
 }

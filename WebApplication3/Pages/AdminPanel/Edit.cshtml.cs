@@ -13,11 +13,11 @@ namespace WebApplication3.Pages.AdminPanel
 {
     public class EditModel : PageModel
     {
-        private readonly WebApplication3.Data.WebApplication3Context _context;
+        private readonly HttpClient _httpClient;
 
-        public EditModel(WebApplication3.Data.WebApplication3Context context)
+        public EditModel(IHttpClientFactory httpClientFactory)
         {
-            _context = context;
+            _httpClient = httpClientFactory.CreateClient();
         }
 
         [BindProperty]
@@ -30,17 +30,19 @@ namespace WebApplication3.Pages.AdminPanel
                 return NotFound();
             }
 
-            var item =  await _context.Item.FirstOrDefaultAsync(m => m.Id == id);
-            if (item == null)
+            var response = await _httpClient.GetAsync($"https://localhost:7139/api/Items/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                Item = await response.Content.ReadFromJsonAsync<Item>();
+            }
+            else
             {
                 return NotFound();
             }
-            Item = item;
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -48,30 +50,15 @@ namespace WebApplication3.Pages.AdminPanel
                 return Page();
             }
 
-            _context.Attach(Item).State = EntityState.Modified;
-
-            try
+            var response = await _httpClient.PutAsJsonAsync($"https://localhost:7139/api/Items/{Item.Id}", Item);
+            if (response.IsSuccessStatusCode)
             {
-                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!ItemExists(Item.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Page();
             }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool ItemExists(int id)
-        {
-            return _context.Item.Any(e => e.Id == id);
         }
     }
 }

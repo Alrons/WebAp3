@@ -13,11 +13,11 @@ namespace WebApplication3.Pages.ManageSize
 {
     public class EditModel : PageModel
     {
-        private readonly WebApplication3.Data.WebApplication3Context _context;
+        private readonly HttpClient _httpClient;
 
-        public EditModel(WebApplication3.Data.WebApplication3Context context)
+        public EditModel(IHttpClientFactory httpClientFactory)
         {
-            _context = context;
+            _httpClient = httpClientFactory.CreateClient();
         }
 
         [BindProperty]
@@ -25,18 +25,12 @@ namespace WebApplication3.Pages.ManageSize
 
         public async Task<IActionResult> OnGetAsync()
         {
-
-            var sizetable =  await _context.SizeTable.FirstOrDefaultAsync(m => m.Id == 1);
-            if (sizetable == null)
-            {
-                return NotFound();
-            }
-            SizeTable = sizetable;
+            var response = await _httpClient.GetAsync("https://localhost:7139/api/SizeTables/1");
+            response.EnsureSuccessStatusCode();
+            SizeTable = await response.Content.ReadFromJsonAsync<SizeTable>();
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -44,30 +38,10 @@ namespace WebApplication3.Pages.ManageSize
                 return Page();
             }
 
-            _context.Attach(SizeTable).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SizeTableExists(SizeTable.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var response = await _httpClient.PutAsJsonAsync("https://localhost:7139/api/SizeTables/1", SizeTable);
+            response.EnsureSuccessStatusCode();
 
             return RedirectToPage("./Index");
-        }
-
-        private bool SizeTableExists(int id)
-        {
-            return _context.SizeTable.Any(e => e.Id == id);
         }
     }
 }

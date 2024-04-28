@@ -1,0 +1,27 @@
+﻿@page
+@model WebApplication3.Pages.ManageSize.IndexModel
+
+<div>
+    <h4>SizeTable</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SizeTable.Height)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SizeTable.Height)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SizeTable.Width)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SizeTable.Width)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit">Edit</a> |
+</div>
+<div>
+    <p class="text-warning ">Нельзя чтобы произведение высоты на ширину было меньше чем максимальное значение места в админ панли</p>
+</div>

@@ -12,11 +12,11 @@ namespace WebApplication3.Pages.AdminPanel
 {
     public class DetailsModel : PageModel
     {
-        private readonly WebApplication3.Data.WebApplication3Context _context;
+        private readonly HttpClient _httpClient;
 
-        public DetailsModel(WebApplication3.Data.WebApplication3Context context)
+        public DetailsModel(IHttpClientFactory httpClientFactory)
         {
-            _context = context;
+            _httpClient = httpClientFactory.CreateClient();
         }
 
         public Item Item { get; set; } = default!;
@@ -28,15 +28,17 @@ namespace WebApplication3.Pages.AdminPanel
                 return NotFound();
             }
 
-            var item = await _context.Item.FirstOrDefaultAsync(m => m.Id == id);
-            if (item == null)
+            var response = await _httpClient.GetAsync($"https://localhost:7139/api/Items/{id}");
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                var item = await response.Content.ReadFromJsonAsync<Item>();
+                Item = item;
             }
             else
             {
-                Item = item;
+                return NotFound();
             }
+
             return Page();
         }
     }

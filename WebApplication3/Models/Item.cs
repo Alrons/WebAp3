@@ -15,5 +15,22 @@
         // Коафицент умнажения мощьности при добовлнения еще одного item в одно и тоже место
         public int XPover { get; set; }
 
+        public Item(int id, string? title, string? description, int price, int сurrency, string? image, int place, int health, int power, int xPover)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            Price = price;
+            Сurrency = сurrency;
+            Image = image;
+            Place = place;
+            Health = health;
+            Power = power;
+            XPover = xPover;
+        }
+
+        public Item()
+        {
+        }
     }
 }

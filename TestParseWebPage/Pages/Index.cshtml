@@ -1,0 +1,34 @@
+﻿@page
+@using AllItems 
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    List<Items> items = (List<Items>)ViewData["items"];
+}
+
+<div class="text-center">
+    
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>urrency</th>
+            <th>Power</th>
+            <th>XPover</th>
+        </tr>
+        @{
+            for (int i = 0; i < items.Count;i++)
+            {
+                <tr>
+                    <td>@items[i].Title</td>
+                    <td>@items[i].Description</td>
+                    <td>@items[i].Price</td>
+                    <td>@items[i].Сurrency</td>
+                    <td>@items[i].Power</td>
+                    <td>@items[i].XPover</td>
+                </tr>
+            }
+        }
+    </table>
+</div>
