@@ -16,5 +16,6 @@ namespace DataA.Data
 
         public DbSet<DataA.Models.Items> Items { get; set; } = default!;
         public DbSet<DataA.Models.SizeTable> SizeTable { get; set; } = default!;
+        public DbSet<DataA.Models.AddedItems> AddedItems { get; set; } = default!;
     }
 }
